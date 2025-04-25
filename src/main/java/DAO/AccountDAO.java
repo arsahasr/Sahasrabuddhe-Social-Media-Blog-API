@@ -11,22 +11,22 @@ import java.util.List;
 public class AccountDAO {
     
     public Account insertAccount(Account account) { // function 1
-        Connection connection = ConnectionUtil.getConnection();
+        Connection connection = ConnectionUtil.getConnection(); // connect to database.
 
         try {
             String sql = "INSERT INTO account (username, password) VALUES (?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, account.getUsername());
-            statement.setString(2, account.getPassword());
+            statement.setString(1, account.getUsername()); // get username val for acct
+            statement.setString(2, account.getPassword()); // get password val for acct.
             
-            statement.executeUpdate();
-            ResultSet pkeyResultSet = statement.getGeneratedKeys();
+            statement.executeUpdate(); // update database.
+            ResultSet pkeyResultSet = statement.getGeneratedKeys(); // create generated keys for the database by rows. (1, 2, etc.)
             if(pkeyResultSet.next()){
                 int generated_account_id = (int) pkeyResultSet.getLong(1);
-                return new Account(generated_account_id, account.getUsername(), account.getPassword());
+                return new Account(generated_account_id, account.getUsername(), account.getPassword()); // return the new acct object while the result set has a column.
             }
     } catch (SQLException e) {
-        System.out.println(e.getMessage());
+        System.out.println(e.getMessage()); 
     }
     return null;
 
@@ -37,17 +37,17 @@ public class AccountDAO {
         try {
             String sql = "SELECT * FROM ACCOUNT WHERE USERNAME = ? AND PASSWORD = ?";
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            statement.setString(1, account.getUsername());
-            statement.setString(2, account.getPassword());
+            statement.setString(1, account.getUsername()); // get username val for acct
+            statement.setString(2, account.getPassword()); // get password val for acct.
             
             ResultSet rs = statement.executeQuery();
 
-            while(rs.next()){
-                Account account_new = new Account(rs.getInt("account_id"),
+            while(rs.next()){ // while there is a column:
+                Account account_new = new Account(rs.getInt("account_id"), // return an acct object referencing these columns.
                         rs.getString("username"),
                         rs.getString("password"));
 
-                return account_new;
+                return account_new; // return this acct new object.
                 }
             }
          catch (SQLException e){
@@ -61,11 +61,11 @@ public class AccountDAO {
         Connection connection = ConnectionUtil.getConnection();
 
         try {
-            String sql = "SELECT * FROM account WHERE account_id = ?";
+            String sql = "SELECT * FROM account WHERE account_id = ?"; // only want those for a specific id.
             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, accountId);
             
-            ResultSet rs = statement.executeQuery();
+            ResultSet rs = statement.executeQuery(); // as we are using select.
 
             while(rs.next()){
                 Account accnt = new Account(rs.getInt("account_id"),
@@ -86,9 +86,9 @@ public class AccountDAO {
         List<Account> accounts = new ArrayList<>();
         try {
             //Write SQL logic here
-            String sql = "SELECT * FROM account";
+            String sql = "SELECT * FROM account"; // want all accounts from the database.
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            ResultSet rs = preparedStatement.executeQuery();
+            ResultSet rs = preparedStatement.executeQuery(); // as we are using select.
             while(rs.next()){
                 Account account = new Account(rs.getString("username"), rs.getString("password"));
                 accounts.add(account);
@@ -98,32 +98,6 @@ public class AccountDAO {
         }
         return accounts;
     }
-
-
-
-
-
-
-    public static void main(String[] args) {
-        AccountDAO accnt_dao = new AccountDAO();
-        Account a1 = new Account("user1", "password");
-        Account a2 = accnt_dao.insertAccount(a1);
-
-        System.out.println(a1.toString());
-        System.out.println(a2.toString());
-
-        Account a3 = accnt_dao.getByAccountId(0);
-        Account a4 = accnt_dao.getByAccountId(2);
-
-        if (a3 != null) {
-            System.out.println(a3.toString());
-        }
-        else {
-            System.out.println("Null Account");
-        }
-        System.out.println(a4.toString());
-    }
-
 }
 
 

@@ -10,7 +10,7 @@ public class AccountService {
      * No-args constructor for creating a new AccountService with a new AccountDAO.
      */
     public AccountService() {
-        accountDAO = new AccountDAO();
+        accountDAO = new AccountDAO(); // a new instance of the accountdao class is created.
     }
 
     /**
@@ -19,44 +19,22 @@ public class AccountService {
      * @param account the Account object to insert
      * @return the inserted Account with generated ID
      */
-    public Account addAccount(Account account) { 
-        if ((!account.getUsername().isBlank()) && (account.getPassword().length() >= 4)) {
-            return accountDAO.insertAccount(account);
+    public Account addAccount(Account account) {  // here we are getting an account object from the controller, and conducting business logic.
+        if ((!account.getUsername().isBlank()) && (account.getPassword().length() >= 4)) { // logic makes sure username is not blank, and the password length is at least 4.
+            return accountDAO.insertAccount(account); // if it is true we call the insertaccount method, which exists in the DAO layer.
         }
         else {
-            return null;
+            return null; // else we return empty. 
         }
 }
     
         
-    public Account verifyAccount(Account account) { // function 2
-        return accountDAO.verifyAccount(account);
+    public Account verifyAccount(Account account) { // no verify business logic needed.
+        return accountDAO.verifyAccount(account); // we call the verify acct method in the DAO layer
     }
         
-    public Account getByAccountId(int accountId) { // function 3
-        return accountDAO.getByAccountId(accountId);
-    }
-    
-    public static void main(String[] args) {
-        // now test the media controller object. in the final version, we will communicate with the port 8080
-        // and ask the media controller object to create a new account for us, and do other stuff. but for this
-        // test we will directly call the addAccount method and other methods to make sure that these methods
-        // work correctly. once we know that these methods work correctly, then the SocialMediaController.java
-        // code will basically call the methods with the proper Account object, and everything should work correctly.
-
-        // prepare the database so that we can insert a new username/password. basically create the
-        // right tables etc.
-
-        // create an account service object that will do the database stuff
-        AccountService as = new AccountService();
-
-        // now try to create a username/password by directly 
-        Account a = new Account("user", "password");
-        Account na = as.addAccount(a);
-        System.out.println(na);
-        
-        // later we need to check if na has the info we wanted and also then check if we can lookup the account by 
-        // querying the database.
+    public Account getByAccountId(int accountId) { // no get by account id business logic needed.
+        return accountDAO.getByAccountId(accountId); // we call the get by acct id method in the DAO layer
     }
 
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageDAO {
-    public Message insertMessage(Message message) {
+    public Message insertMessage(Message message) { // accepts a message object.
         Connection conn = ConnectionUtil.getConnection();
         String sql = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)"; // we want to insert a message object into the database containing all columns. 
         try {
@@ -129,7 +129,7 @@ public class MessageDAO {
         Connection connection = ConnectionUtil.getConnection();
         List <Message> messages = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM message WHERE posted_by = ?";
+            String sql = "SELECT * FROM message WHERE posted_by = ?"; // we want an entry for a specific user. 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setInt(1, account_id);
@@ -141,7 +141,7 @@ public class MessageDAO {
                                             rs.getInt("posted_by"), rs.getString("message_text"),
                                             rs.getLong("time_posted_epoch"));
             
-                    messages.add(message);
+                    messages.add(message); // we had created an empty list called messages. Now we add to this list one by one if the entry exists.
                 }
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
