@@ -55,11 +55,13 @@ public class SocialMediaController {
      */
     private void registerNewUserHandler(Context ctx) throws JsonProcessingException { // function 1
         ObjectMapper mapper = new ObjectMapper(); 
-        Account account = mapper.readValue(ctx.body(), Account.class); // retrieve the data from the ctx.body. 
+        Account account = mapper.readValue(ctx.body(), Account.class); // retrieve the data from the ctx.body, and converts it to account type object.  
         Account newaccount = accountService.addAccount(account);
-        if ((newaccount != null) && (!newaccount.getUsername().isBlank()) && (newaccount.getPassword().length() >= 4)) { // makes sure username is not blank, password is at least 4 char, and an account with that username doesn't already exist.
+        
+        if (newaccount != null) {    
             ctx.json(mapper.writeValueAsString(newaccount));
-        } else {
+        } 
+        else {
             ctx.status(400);
         }
     }
@@ -68,6 +70,7 @@ public class SocialMediaController {
            ObjectMapper mapper = new ObjectMapper();
            Account account = mapper.readValue(ctx.body(), Account.class);
            Account verify_account = accountService.verifyAccount(account);
+
            if (verify_account != null) {
                 ctx.json(mapper.writeValueAsString(verify_account));
            }
@@ -80,13 +83,13 @@ public class SocialMediaController {
     private void newMessageCreationHandler(Context ctx) throws JsonProcessingException { // function 3
         ObjectMapper mapper = new ObjectMapper();
         Message message = mapper.readValue(ctx.body(), Message.class); // 1. create msg obj from ctx.body
-        int posted_by = message.getPosted_by(); // 2. extract posted_by from the message
+     //   int posted_by = message.getPosted_by(); // 2. extract posted_by from the message
 
-        Account accnt = accountService.getByAccountId(posted_by); // get account where account_id = posted_by
+      //  Account accnt = accountService.getByAccountId(posted_by); // get account where account_id = posted_by
         // 3. check if posted_by exists in account database etc.; 4. if so, then insert message
-        if ((!message.getMessage_text().isBlank()) && (message.getMessage_text().length() <= 255) && (accnt != null)) { // check conditions. if it meets all the conditions, add the message. 
-            Message newmessage = messageService.addMessage(message);
+        Message newmessage = messageService.addMessage(message);
             // create message object which includes the mssage id and return the object
+        if (newmessage != null) {
             ctx.json(mapper.writeValueAsString(newmessage));
         }
         else {    
@@ -134,9 +137,10 @@ public class SocialMediaController {
         String msg_text = msg.getMessage_text(); // we want the string object of message. Our message has getMessage_text() defined in the model. So, we can use that here. 
         Message update_message = messageService.updateMessagebyId(msg_id, msg_text);
 
-        if ((!msg_text.isBlank()) && (msg_text.length() <= 255) && (update_message != null)) {
+        if (update_message != null) {
             ctx.json(mapper.writeValueAsString(update_message));
         }
+
         else {
             ctx.status(400);
         }

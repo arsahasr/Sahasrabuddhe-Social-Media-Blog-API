@@ -19,10 +19,15 @@ public class AccountService {
      * @param account the Account object to insert
      * @return the inserted Account with generated ID
      */
-    public Account addAccount(Account account) { // function 1
-
-            return accountDAO.insertAccount(account);            
+    public Account addAccount(Account account) { 
+        if ((!account.getUsername().isBlank()) && (account.getPassword().length() >= 4)) {
+            return accountDAO.insertAccount(account);
         }
+        else {
+            return null;
+        }
+}
+    
         
     public Account verifyAccount(Account account) { // function 2
         return accountDAO.verifyAccount(account);

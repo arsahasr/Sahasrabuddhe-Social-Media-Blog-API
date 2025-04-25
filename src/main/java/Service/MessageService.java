@@ -17,8 +17,12 @@ public class MessageService {
     }
 
     public Message addMessage(Message message) { // function 1
-        
-        return messageDAO.insertMessage(message);
+        if ((!message.getMessage_text().isBlank()) && (message.getMessage_text().length() <= 255)) {
+            return messageDAO.insertMessage(message);
+        }
+        else {
+            return null;
+        }
         
     }
     public List<Message> getAllMessages() { // function 2
@@ -34,10 +38,14 @@ public class MessageService {
     }
 
     public Message updateMessagebyId(int msg_id, String msg_text) {
-
-        return messageDAO.updateMessageById(msg_id, msg_text);
+        if ((!msg_text.isBlank()) && (msg_text.length() <= 255)) {   
+            return messageDAO.updateMessageById(msg_id, msg_text);
     }
+        else {
+            return null;
+        }
     
+}
     public List<Message> getMessageByAccountId(int account_id) {
         return messageDAO.getAllMessagesByAccountId(account_id);
 
